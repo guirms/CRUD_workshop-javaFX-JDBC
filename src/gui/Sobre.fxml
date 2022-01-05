@@ -5,10 +5,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox prefHeight="238.0" prefWidth="360.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17">
+<VBox prefHeight="379.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label text="Sobre">
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" prefWidth="602.0" text="Sobre">
          <font>
             <Font name="System Bold" size="22.0" />
          </font>
@@ -16,10 +15,10 @@
             <Insets />
          </opaqueInsets>
          <padding>
-            <Insets left="20.0" right="10.0" top="10.0" />
+            <Insets left="40.0" right="10.0" top="10.0" />
          </padding>
       </Label>
-      <Label text="JavaFX Aplicação Demo">
+      <Label alignment="CENTER" prefHeight="339.0" prefWidth="603.0" text="JavaFX Aplicação Demo">
          <padding>
             <Insets left="20.0" />
          </padding>

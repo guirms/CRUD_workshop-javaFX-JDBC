@@ -32,7 +32,7 @@ public class MainTelaPrincipalController implements Initializable {
 
 	@FXML
 	public void onMenuItemDepartamentoAction() {
-		System.out.println("onMenuItemDepartamentoAction()");
+		carregarTela("/gui/ListaDepartamento.fxml");
 	}
 
 	@FXML
