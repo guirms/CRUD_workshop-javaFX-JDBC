@@ -3,6 +3,7 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import application.Main;
 import gui.util.Alerts;
@@ -33,57 +34,40 @@ public class MainTelaPrincipalController implements Initializable {
 
 	@FXML
 	public void onMenuItemDepartamentoAction() {
-		carregarTela2("/gui/ListaDepartamento.fxml");
+		carregarTela("/gui/ListaDepartamento.fxml", (ListaDepartamentoController controller) -> {
+			controller.setDepartamentoService(new DepartamentoService());
+			controller.atualizarTableView();
+		});
 	}
 
 	@FXML
 	public void onMenuItemSobreAction() {
-		carregarTela("/gui/Sobre.fxml");
+		carregarTela("/gui/Sobre.fxml", x -> {});
 	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 	}
 
-	public synchronized void carregarTela(String enderecoCompleto) {
+	public synchronized <T> void carregarTela(String enderecoCompleto, Consumer<T> inicializacao) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(enderecoCompleto));
 			VBox vBox = loader.load();
-			 
-			Scene mainScene = Main.getMainScene();
-			VBox mainVBox = (VBox)((ScrollPane)mainScene.getRoot()).getContent();
-			
-			Node mainMenu = mainVBox.getChildren().get(0);
-			mainVBox.getChildren().clear();
-			mainVBox.getChildren().add(mainMenu);
-			mainVBox.getChildren().addAll(vBox);
-			
-		} catch (IOException e) {
-			Alerts.showAlert("IoException", "Erro ao carregar a página", e.getMessage(), AlertType.ERROR);
-		}
-	}
-	
-	public synchronized void carregarTela2(String enderecoCompleto) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(enderecoCompleto));
-			VBox vBox = loader.load();
-			 
-			Scene mainScene = Main.getMainScene();
-			VBox mainVBox = (VBox)((ScrollPane)mainScene.getRoot()).getContent();
-			
-			Node mainMenu = mainVBox.getChildren().get(0);
-			mainVBox.getChildren().clear();
-			mainVBox.getChildren().add(mainMenu);
-			mainVBox.getChildren().addAll(vBox);
-			
-			ListaDepartamentoController controller = loader.getController();
-			controller.setDepartamentoService(new DepartamentoService());
-			controller.atualizarTableView();
-			
-		} catch (IOException e) {
-			Alerts.showAlert("IoException", "Erro ao carregar a página", e.getMessage(), AlertType.ERROR);
-		}
-	}
 
+			Scene mainScene = Main.getMainScene();
+			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+
+			Node mainMenu = mainVBox.getChildren().get(0);
+			mainVBox.getChildren().clear();
+			mainVBox.getChildren().add(mainMenu);
+			mainVBox.getChildren().addAll(vBox);
+			
+			T controlador = loader.getController();
+			inicializacao.accept(controlador);
+
+		} catch (IOException e) {
+			Alerts.showAlert("IoException", "Erro ao carregar a página", e.getMessage(), AlertType.ERROR);
+		}
+	}
 
 }
