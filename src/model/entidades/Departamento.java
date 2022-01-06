@@ -4,25 +4,26 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Departamento implements Serializable {
-
+	
 	private static final long serialVersionUID = 1L;
 	
-	private int id;
+	private Integer id;
 	private String nome;
 	
 	public Departamento() {
+		
 	}
-
-	public Departamento(int id, String nome) {
+	
+	public Departamento(Integer id, String nome) {
 		this.id = id;
 		this.nome = nome;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -36,7 +37,7 @@ public class Departamento implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(id, nome);
 	}
 
 	@Override
@@ -48,13 +49,17 @@ public class Departamento implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Departamento other = (Departamento) obj;
-		return id == other.id;
+		return Objects.equals(id, other.id) && Objects.equals(nome, other.nome);
 	}
 
 	@Override
 	public String toString() {
-		return "Departamento [id=" + id + ", Nome=" + nome + "]";
+		return "Departamento [id=" + id + ", nome=" + nome + "]";
 	}
+	
+	
+	
+	
 	
 	
 
