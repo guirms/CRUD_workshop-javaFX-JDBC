@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import application.Main;
 import gui.util.Alerts;
+import gui.util.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -84,6 +85,7 @@ public class ListaDepartamentoController implements Initializable {
 			
 			DepartamentoFormController controller = loader.getController();
 			controller.setDepartamento(dp);
+			controller.setDpService(new DepartamentoService());
 			controller.atualizarDadosFormulario();
 			
 			Stage stageDialogo = new Stage();

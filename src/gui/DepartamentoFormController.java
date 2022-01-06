@@ -3,20 +3,34 @@ package gui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import db.DbException;
+import gui.util.Alerts;
 import gui.util.Constraints;
+import gui.util.Utils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entidades.Departamento;
+import model.services.DepartamentoService;
 
 public class DepartamentoFormController implements Initializable {
 
 	private Departamento dp;
 
+	private DepartamentoService dpService;
+	
+	private ListaDepartamentoController dpListaController;
+
 	public void setDepartamento(Departamento dp) {
 		this.dp = dp;
+	}
+
+	public void setDpService(DepartamentoService ds) {
+		this.dpService = ds;
 	}
 
 	@FXML
@@ -35,12 +49,34 @@ public class DepartamentoFormController implements Initializable {
 	private Button btCancelar;
 
 	@FXML
-	public void onBtSalvarAction() {
-		System.out.println("Botão salvar");
+	public void onBtSalvarAction(ActionEvent evento) {
+		if (dp == null) {
+			throw new IllegalStateException("Departamento nulo");
+		}
+		if (dpService == null) {
+			throw new IllegalStateException("Serviço nulo");
+		}
+		try {
+			dp = getFormData();
+			dpService.atualizarOuSalvar(dp);
+			Utils.stageAtual(evento).close();
+		} catch(DbException db) {
+			Alerts.showAlert("Erro ao salvar", null, db.getMessage(), AlertType.ERROR);
+		}
+		
 	}
 
-	public void onBtCancelarAction() {
-		System.out.println("Botão cancelar");
+	private Departamento getFormData() {
+		Departamento dp = new Departamento();
+
+		dp.setId(Utils.TryParseToInt(txtId.getText()));
+		dp.setNome(txtNome.getText());
+
+		return dp;
+	}
+
+	public void onBtCancelarAction(ActionEvent evento) {
+		Utils.stageAtual(evento).close();
 	}
 
 	@Override
