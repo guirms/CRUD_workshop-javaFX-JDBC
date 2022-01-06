@@ -15,6 +15,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import model.services.DepartamentoService;
 
 public class MainTelaPrincipalController implements Initializable {
 
@@ -32,7 +33,7 @@ public class MainTelaPrincipalController implements Initializable {
 
 	@FXML
 	public void onMenuItemDepartamentoAction() {
-		carregarTela("/gui/ListaDepartamento.fxml");
+		carregarTela2("/gui/ListaDepartamento.fxml");
 	}
 
 	@FXML
@@ -42,8 +43,6 @@ public class MainTelaPrincipalController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		
-
 	}
 
 	public synchronized void carregarTela(String enderecoCompleto) {
@@ -63,5 +62,28 @@ public class MainTelaPrincipalController implements Initializable {
 			Alerts.showAlert("IoException", "Erro ao carregar a página", e.getMessage(), AlertType.ERROR);
 		}
 	}
+	
+	public synchronized void carregarTela2(String enderecoCompleto) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(enderecoCompleto));
+			VBox vBox = loader.load();
+			 
+			Scene mainScene = Main.getMainScene();
+			VBox mainVBox = (VBox)((ScrollPane)mainScene.getRoot()).getContent();
+			
+			Node mainMenu = mainVBox.getChildren().get(0);
+			mainVBox.getChildren().clear();
+			mainVBox.getChildren().add(mainMenu);
+			mainVBox.getChildren().addAll(vBox);
+			
+			ListaDepartamentoController controller = loader.getController();
+			controller.setDepartamentoService(new DepartamentoService());
+			controller.atualizarTableView();
+			
+		} catch (IOException e) {
+			Alerts.showAlert("IoException", "Erro ao carregar a página", e.getMessage(), AlertType.ERROR);
+		}
+	}
+
 
 }
