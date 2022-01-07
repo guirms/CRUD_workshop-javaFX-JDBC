@@ -1,6 +1,7 @@
 package gui;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -39,12 +40,21 @@ public class ListaVendedorController implements Initializable, OuvinteDeMudancaD
 
 	@FXML
 	private TableColumn<Vendedor, String> colunaTabelaNome;
+	
+	@FXML
+	private TableColumn<Vendedor, String> colunaTabelaEmail;
+	
+	@FXML
+	private TableColumn<Vendedor, Double> colunaTabelaSalarioBase;
+	
+	@FXML
+	private TableColumn<Vendedor, Date> colunaTabelaDataNascimento;
+	
+	@FXML
+	private TableColumn<Vendedor, Vendedor> colunaTabelaEDIT;
 
 	@FXML
-	TableColumn<Vendedor, Vendedor> colunaTabelaEDIT;
-
-	@FXML
-	TableColumn<Vendedor, Vendedor> colunaTabelaRemover;
+	private TableColumn<Vendedor, Vendedor> colunaTabelaRemover;
 
 	@FXML
 	private Button btNovo;
@@ -71,7 +81,12 @@ public class ListaVendedorController implements Initializable, OuvinteDeMudancaD
 	private void iniciarNodes() {
 		colunaTabelaId.setCellValueFactory(new PropertyValueFactory<>("Id"));
 		colunaTabelaNome.setCellValueFactory(new PropertyValueFactory<>("Nome"));
-
+		colunaTabelaEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+		colunaTabelaDataNascimento.setCellValueFactory(new PropertyValueFactory<>("dataNascimento"));
+		Utils.formatarDataColunaTabela(colunaTabelaDataNascimento, "dd/MM/yyyy");
+		colunaTabelaSalarioBase.setCellValueFactory(new PropertyValueFactory<>("salarioBase"));
+		Utils.formatarDoubleColunaTabela(colunaTabelaSalarioBase, 2);
+		
 		Stage stage = (Stage) Main.getMainScene().getWindow();
 		tableViewVendedor.prefHeightProperty().bind(stage.heightProperty());
 	}
@@ -130,8 +145,7 @@ public class ListaVendedorController implements Initializable, OuvinteDeMudancaD
 					return;
 				}
 				setGraphic(button);
-				button.setOnAction(
-						event -> criarDialogoForm(obj, "/gui/VendedorForm.fxml", Utils.stageAtual(event)));
+				button.setOnAction(event -> criarDialogoForm(obj, "/gui/VendedorForm.fxml", Utils.stageAtual(event)));
 			}
 		});
 	}

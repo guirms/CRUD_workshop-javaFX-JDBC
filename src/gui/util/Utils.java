@@ -1,15 +1,21 @@
 package gui.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.stage.Stage;
 
 public class Utils {
 
-	public static Stage stageAtual (ActionEvent evento) {
+	public static Stage stageAtual(ActionEvent evento) {
 		return (Stage) ((Node) evento.getSource()).getScene().getWindow();
 	}
-	
+
 	public static Integer TryParseToInt(String str) {
 		try {
 			return Integer.parseInt(str);
@@ -17,6 +23,42 @@ public class Utils {
 			return null;
 		}
 	}
-	
-	
+
+	public static <T> void formatarDataColunaTabela(TableColumn<T, Date> tabelaColuna, String format) {
+		tabelaColuna.setCellFactory(coluna -> {
+			TableCell<T, Date> cell = new TableCell<T, Date>() {
+				private SimpleDateFormat sdf = new SimpleDateFormat(format);
+
+				@Override
+				protected void updateItem(Date item, boolean vazio) {
+					super.updateItem(item, vazio);
+					if (vazio) {
+						setText(null);
+					} else {
+						setText(sdf.format(item));
+					}
+				}
+			};
+			return cell;
+		});
+	}
+
+	public static <T> void formatarDoubleColunaTabela(TableColumn<T, Double> colunaTabela, int casasDecimais) {
+		colunaTabela.setCellFactory(coluna -> {
+			TableCell<T, Double> cell = new TableCell<T, Double>() {
+				@Override
+				protected void updateItem(Double item, boolean vazio) {
+					super.updateItem(item, vazio);
+					if (vazio) {
+						setText(null);
+					} else {
+						Locale.setDefault(Locale.US);
+						setText(String.format("%." + casasDecimais + "f", item));
+					}
+				}
+			};
+			return cell;
+		});
+	}
+
 }
