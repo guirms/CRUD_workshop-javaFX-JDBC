@@ -17,6 +17,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import model.services.DepartamentoService;
+import model.services.VendedorService;
 
 public class MainTelaPrincipalController implements Initializable {
 
@@ -29,7 +30,10 @@ public class MainTelaPrincipalController implements Initializable {
 
 	@FXML
 	public void onMenuItemVendedorAction() {
-		System.out.println("onMenuItemVendedorAction()");
+		carregarTela("/gui/ListaVendedor.fxml", (ListaVendedorController controller) -> {
+			controller.setVendedorService(new VendedorService());
+			controller.atualizarTableView();
+		});
 	}
 
 	@FXML
