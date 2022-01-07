@@ -3,7 +3,9 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import db.DbException;
 import gui.ouvintes.OuvinteDeMudancaDeDados;
@@ -18,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entidades.Departamento;
+import model.exceptions.ValidacaoException;
 import model.services.DepartamentoService;
 
 public class DepartamentoFormController implements Initializable {
@@ -25,7 +28,7 @@ public class DepartamentoFormController implements Initializable {
 	private Departamento dp;
 
 	private DepartamentoService dpService;
-	
+
 	private List<OuvinteDeMudancaDeDados> listaOuvintesDados = new ArrayList<>();
 
 	public void setDepartamento(Departamento dp) {
@@ -64,28 +67,40 @@ public class DepartamentoFormController implements Initializable {
 			dpService.atualizarOuSalvar(dp);
 			notificarListaOuvintesDados();
 			Utils.stageAtual(evento).close();
-		} catch(DbException db) {
+		} catch (DbException db) {
 			Alerts.showAlert("Erro ao salvar", null, db.getMessage(), AlertType.ERROR);
+		} catch (ValidacaoException ve) {
+			setMensagensDeErros(ve.getErros());
 		}
-		
+
 	}
-	
+
 	private void notificarListaOuvintesDados() {
 		for (OuvinteDeMudancaDeDados ouvinte : listaOuvintesDados) {
 			ouvinte.onDadoAlterado();
 		}
-		
+
 	}
 
 	public void inscreverOuvinteDados(OuvinteDeMudancaDeDados ouvinte) {
 		listaOuvintesDados.add(ouvinte);
 	}
-	
+
 	private Departamento getFormData() {
 		Departamento dp = new Departamento();
 
+		ValidacaoException validException = new ValidacaoException("Erro de validação");
+
 		dp.setId(Utils.TryParseToInt(txtId.getText()));
+
+		if (txtNome.getText() == null || txtNome.getText().trim() == "") {
+			validException.adicionarErro("nome", "O campo não pode ser vazio");
+		}
 		dp.setNome(txtNome.getText());
+
+		if (validException.getErros().size() > 0) {
+			throw validException;
+		}
 
 		return dp;
 	}
@@ -110,6 +125,15 @@ public class DepartamentoFormController implements Initializable {
 		}
 		txtId.setText(String.valueOf(dp.getId()));
 		txtNome.setText(dp.getNome());
+
+	}
+
+	private void setMensagensDeErros(Map<String, String> erros) {
+		Set<String> campos = erros.keySet();
+
+		if (campos.contains("nome")) {
+			labelErro.setText(erros.get("nome"));
+		}
 
 	}
 
