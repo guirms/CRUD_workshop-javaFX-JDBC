@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.ouvintes.OuvinteDeMudancaDeDados;
 import gui.util.Alerts;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
@@ -26,7 +27,7 @@ import javafx.stage.Stage;
 import model.entidades.Departamento;
 import model.services.DepartamentoService;
 
-public class ListaDepartamentoController implements Initializable {
+public class ListaDepartamentoController implements Initializable, OuvinteDeMudancaDeDados {
 	
 	private DepartamentoService service;
 	
@@ -86,6 +87,7 @@ public class ListaDepartamentoController implements Initializable {
 			DepartamentoFormController controller = loader.getController();
 			controller.setDepartamento(dp);
 			controller.setDpService(new DepartamentoService());
+			controller.inscreverOuvinteDados(this);
 			controller.atualizarDadosFormulario();
 			
 			Stage stageDialogo = new Stage();
@@ -99,6 +101,12 @@ public class ListaDepartamentoController implements Initializable {
 		} catch (IOException io){
 			Alerts.showAlert("IOException", "Erro ao carregar a tela", io.getMessage(), AlertType.ERROR);
 		}
+	}
+
+	@Override
+	public void onDadoAlterado() {
+		atualizarTableView();
+		
 	}
 	
 }

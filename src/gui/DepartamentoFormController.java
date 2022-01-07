@@ -1,9 +1,12 @@
 package gui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import db.DbException;
+import gui.ouvintes.OuvinteDeMudancaDeDados;
 import gui.util.Alerts;
 import gui.util.Constraints;
 import gui.util.Utils;
@@ -23,7 +26,7 @@ public class DepartamentoFormController implements Initializable {
 
 	private DepartamentoService dpService;
 	
-	private ListaDepartamentoController dpListaController;
+	private List<OuvinteDeMudancaDeDados> listaOuvintesDados = new ArrayList<>();
 
 	public void setDepartamento(Departamento dp) {
 		this.dp = dp;
@@ -59,13 +62,25 @@ public class DepartamentoFormController implements Initializable {
 		try {
 			dp = getFormData();
 			dpService.atualizarOuSalvar(dp);
+			notificarListaOuvintesDados();
 			Utils.stageAtual(evento).close();
 		} catch(DbException db) {
 			Alerts.showAlert("Erro ao salvar", null, db.getMessage(), AlertType.ERROR);
 		}
 		
 	}
+	
+	private void notificarListaOuvintesDados() {
+		for (OuvinteDeMudancaDeDados ouvinte : listaOuvintesDados) {
+			ouvinte.onDadoAlterado();
+		}
+		
+	}
 
+	public void inscreverOuvinteDados(OuvinteDeMudancaDeDados ouvinte) {
+		listaOuvintesDados.add(ouvinte);
+	}
+	
 	private Departamento getFormData() {
 		Departamento dp = new Departamento();
 
