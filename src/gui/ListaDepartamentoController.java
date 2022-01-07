@@ -3,9 +3,12 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import application.Main;
+import db.DbException;
+import db.DbIntegrityException;
 import gui.ouvintes.OuvinteDeMudancaDeDados;
 import gui.util.Alerts;
 import gui.util.Utils;
@@ -19,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -44,6 +48,9 @@ public class ListaDepartamentoController implements Initializable, OuvinteDeMuda
 
 	@FXML
 	TableColumn<Departamento, Departamento> colunaTabelaEDIT;
+
+	@FXML
+	TableColumn<Departamento, Departamento> colunaTabelaRemover;
 
 	@FXML
 	private Button btNovo;
@@ -83,6 +90,7 @@ public class ListaDepartamentoController implements Initializable, OuvinteDeMuda
 		obsList = FXCollections.observableArrayList(lista);
 		tableViewDepartamento.setItems(obsList);
 		initBotoesEdit();
+		initBotoesRemocao();
 	}
 
 	private void criarDialogoForm(Departamento dp, String enderecoCompleto, Stage parentStage) {
@@ -132,6 +140,41 @@ public class ListaDepartamentoController implements Initializable, OuvinteDeMuda
 						event -> criarDialogoForm(obj, "/gui/DepartamentoForm.fxml", Utils.stageAtual(event)));
 			}
 		});
+	}
+
+	private void initBotoesRemocao() {
+		colunaTabelaRemover.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		colunaTabelaRemover.setCellFactory(param -> new TableCell<Departamento, Departamento>() {
+			private final Button button = new Button("Remover");
+
+			@Override
+			protected void updateItem(Departamento obj, boolean empty) {
+				super.updateItem(obj, empty);
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(event -> removerEntidade(obj));
+			}
+
+		});
+	}
+
+	private void removerEntidade(Departamento obj) {
+		Optional<ButtonType> resultado = Alerts.mostrarConfirmacao("Confirmação", "Confirmar remoção");
+
+		if (resultado.get() == ButtonType.OK) {
+			if (service == null) {
+				throw new IllegalStateException("Serviço nulo");
+			}
+			try {
+				service.remover(obj);
+				atualizarTableView();
+			} catch (DbException de) {
+				Alerts.showAlert("Erro removendo objeto", null, de.getMessage(), AlertType.ERROR);
+			}
+		}
 	}
 
 }

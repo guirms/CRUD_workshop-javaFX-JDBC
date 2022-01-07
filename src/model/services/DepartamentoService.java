@@ -21,5 +21,9 @@ public class DepartamentoService {
 			dp.atualizar(obj);
 		}
 	}
+	
+	public void remover(Departamento obj) {
+		dp.deletarPorId(obj.getId());
+	}
 
 }
