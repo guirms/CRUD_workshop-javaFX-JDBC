@@ -112,6 +112,7 @@ public class ListaDepartamentoController implements Initializable, OuvinteDeMuda
 			stageDialogo.showAndWait();
 
 		} catch (IOException io) {
+			io.printStackTrace();
 			Alerts.showAlert("IOException", "Erro ao carregar a tela", io.getMessage(), AlertType.ERROR);
 		}
 	}
