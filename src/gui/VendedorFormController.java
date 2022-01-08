@@ -1,8 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -17,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entidades.Vendedor;
@@ -46,7 +50,25 @@ public class VendedorFormController implements Initializable {
 	private TextField txtNome;
 
 	@FXML
-	private Label labelErro;
+	private TextField txtEmail;
+
+	@FXML
+	private DatePicker dpDataNascimento;
+
+	@FXML
+	private TextField txtSalarioBase;
+
+	@FXML
+	private Label labelErroNome;
+
+	@FXML
+	private Label labelErroEmail;
+
+	@FXML
+	private Label labelErroDataNascimento;
+
+	@FXML
+	private Label labelErroSalarioBase;
 
 	@FXML
 	private Button btSalvar;
@@ -116,7 +138,10 @@ public class VendedorFormController implements Initializable {
 
 	private void initializeNodes() {
 		Constraints.setTextFieldInteger(txtId);
-		Constraints.setTextFieldMaxLength(txtNome, 30);
+		Constraints.setTextFieldMaxLength(txtNome, 70);
+		Constraints.setTextFieldDouble(txtSalarioBase);
+		Constraints.setTextFieldMaxLength(txtEmail, 30);
+		Utils.formatarDatePicker(dpDataNascimento, "dd/MM/yyyy");
 	}
 
 	public void atualizarDadosFormulario() {
@@ -125,6 +150,12 @@ public class VendedorFormController implements Initializable {
 		}
 		txtId.setText(String.valueOf(dp.getId()));
 		txtNome.setText(dp.getNome());
+		txtEmail.setText(dp.getEmail());
+		Locale.setDefault(Locale.US);
+		txtSalarioBase.setText(String.format("%.2f", dp.getSalarioBase()));
+		if (dp.getDataNascimento() != null) {
+			dpDataNascimento.setValue(LocalDate.ofInstant(dp.getDataNascimento().toInstant(), ZoneId.systemDefault()));
+		}
 
 	}
 
@@ -132,7 +163,7 @@ public class VendedorFormController implements Initializable {
 		Set<String> campos = erros.keySet();
 
 		if (campos.contains("nome")) {
-			labelErro.setText(erros.get("nome"));
+			labelErroNome.setText(erros.get("nome"));
 		}
 
 	}
