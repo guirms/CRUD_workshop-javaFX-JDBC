@@ -1,9 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -137,6 +139,25 @@ public class VendedorFormController implements Initializable {
 		}
 		dp.setNome(txtNome.getText());
 
+		if (txtEmail.getText() == null || txtEmail.getText().trim() == "") {
+			validException.adicionarErro("email", "O campo não pode ser vazio");
+		}
+		dp.setEmail(txtEmail.getText());
+
+		if (dpDataNascimento.getValue() == null) {
+			validException.adicionarErro("dataNascimento", "O campo não pode ser vazio");
+		} else {
+			Instant instant = Instant.from(dpDataNascimento.getValue().atStartOfDay(ZoneId.systemDefault()));
+			dp.setDataNascimento(Date.from(instant));
+		}
+
+		if (txtSalarioBase.getText() == null || txtSalarioBase.getText().trim() == "") {
+			validException.adicionarErro("salarioBase", "O campo não pode ser vazio");
+		}
+		dp.setSalarioBase(Utils.TryParseToDouble(txtSalarioBase.getText()));
+		
+		dp.setDepartamento(comboBoxDepartamento.getValue());
+
 		if (validException.getErros().size() > 0) {
 			throw validException;
 		}
@@ -193,11 +214,10 @@ public class VendedorFormController implements Initializable {
 	private void setMensagensDeErros(Map<String, String> erros) {
 		Set<String> campos = erros.keySet();
 
-		if (campos.contains("nome")) {
-			labelErroNome.setText(erros.get("nome"));
-		}
-
-	}
+		labelErroNome.setText((campos.contains("nome") ? erros.get("nome") : ""));
+		labelErroEmail.setText((campos.contains("email") ? erros.get("email") : ""));
+		labelErroSalarioBase.setText((campos.contains("salarioBase") ? erros.get("salarioBase") : ""));
+		labelErroDataNascimento.setText((campos.contains("dataNascimento") ? erros.get("dataNascimento") : "")); }
 
 	private void iniciarComboBoxDepartamento() {
 		Callback<ListView<Departamento>, ListCell<Departamento>> fabrica = lv -> new ListCell<Departamento>() {
