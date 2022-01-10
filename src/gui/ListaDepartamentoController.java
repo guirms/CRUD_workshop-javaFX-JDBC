@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import application.Main;
+import aplicacao.Main;
 import db.DbException;
 import gui.ouvintes.OuvinteDeMudancaDeDados;
 import gui.util.Alerts;

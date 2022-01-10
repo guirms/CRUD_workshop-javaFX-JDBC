@@ -1,4 +1,4 @@
-package application;
+package aplicacao;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class Main extends Application {
 			
 			mainScene = new Scene(scrollPane);
 			primaryStage.setScene(mainScene);
-			primaryStage.setTitle("Sample JavaFX application");
+			primaryStage.setTitle("Sistema de manipulação de dados");
 			primaryStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
