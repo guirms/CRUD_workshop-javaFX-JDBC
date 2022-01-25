@@ -32,5 +32,5 @@
 
 ### Para verificar todos os recursos, execute o código em sua máquina.
 
-#### Se você tiver interesse em adquirir o curso, clique [aqui](https://www.udemy.com/course/java-curso-completo/)
+
 
