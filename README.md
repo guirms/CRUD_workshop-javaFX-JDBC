@@ -2,6 +2,8 @@
 
 >Status: Completo✔️
 
+>Linguagem Utilizada: Java ☕
+
 #### O banco de dados utilizado nesse projeto foi o MySQL e suas dependências estão devidamente upadas aqui. Utilizei nesse projeto novos aprendizados adquiridos durante o curso Java orientado á objetos. Como interface gráfica utilizei o JavaFX, a fim de trazer ao usuário uma experiência mais satisfatória e eficiente. 
 
 ## Recursos utilizados:
